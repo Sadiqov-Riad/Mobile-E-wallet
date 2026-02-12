@@ -1,0 +1,76 @@
+Starting project at /Users/riad/Desktop/Mobile-Ewallet/e-wallet
+React Compiler enabled
+Starting Metro Bundler
+Tunnel connected.
+Tunnel ready.
+Waiting on http://localhost:8081
+Logs for your project will appear below.
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+λ Bundling failed 877ms node_modules/expo-router/node/render.js (430 modules)
+
+Metro error: Unable to resolve module fontfaceobserver from /Users/riad/Desktop/Mobile-Ewallet/e-wallet/node_modules/expo-font/build/ExpoFontLoader.web.js: fontfaceobserver could not be found within the project or in these directories:
+  node_modules
+[0m [90m 1 |[39m [36mimport[39m { [33mCodedError[39m[33m,[39m registerWebModule } [36mfrom[39m [32m'expo-modules-core'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m [33mFontObserver[39m [36mfrom[39m [32m'fontfaceobserver'[39m[33m;[39m
+ [90m   |[39m                           [31m[1m^[22m[39m
+ [90m 3 |[39m [36mimport[39m { [33mFontDisplay[39m } [36mfrom[39m [32m'./Font.types'[39m[33m;[39m
+ [90m 4 |[39m [36mfunction[39m getFontFaceStyleSheet() {
+ [90m 5 |[39m     [36mif[39m ([36mtypeof[39m window [33m===[39m [32m'undefined'[39m) {[0m
+
+Import stack:
+
+ node_modules/expo-font/build/ExpoFontLoader.web.js
+ | import "fontfaceobserver"
+
+ node_modules/expo-font/build/server.js
+ | import "./ExpoFontLoader"
+
+ node_modules/expo-router/build/static/renderStaticContent.js
+ | import "expo-font/build/server"
+
+ node_modules/expo-router/node/render.js
+ | import "expo-router/build/static/renderStaticContent"
+
+ 
+ | import "expo-router/node/render.js"
+
+
+Call Stack
+  <unknown> (node_modules/expo-font/build/ExpoFontLoader.web.js:0)
+Web node_modules/expo-router/entry.js ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 99.9% (1131/1131)
+Web Bundled 931ms node_modules/expo-router/entry.js (1131 modules)
+Web node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+Web Bundled 15ms node_modules/expo-router/entry.js (1 module)
+λ Bundling failed 273ms node_modules/expo-router/node/render.js (898 modules)
+
+Metro error: Unable to resolve module fontfaceobserver from /Users/riad/Desktop/Mobile-Ewallet/e-wallet/node_modules/expo-font/build/ExpoFontLoader.web.js: fontfaceobserver could not be found within the project or in these directories:
+  node_modules
+[0m [90m 1 |[39m [36mimport[39m { [33mCodedError[39m[33m,[39m registerWebModule } [36mfrom[39m [32m'expo-modules-core'[39m[33m;[39m
+[31m[1m>[22m[39m[90m 2 |[39m [36mimport[39m [33mFontObserver[39m [36mfrom[39m [32m'fontfaceobserver'[39m[33m;[39m
+ [90m   |[39m                           [31m[1m^[22m[39m
+ [90m 3 |[39m [36mimport[39m { [33mFontDisplay[39m } [36mfrom[39m [32m'./Font.types'[39m[33m;[39m
+ [90m 4 |[39m [36mfunction[39m getFontFaceStyleSheet() {
+ [90m 5 |[39m     [36mif[39m ([36mtypeof[39m window [33m===[39m [32m'undefined'[39m) {[0m
+
+Import stack:
+
+ node_modules/expo-font/build/ExpoFontLoader.web.js
+ | import "fontfaceobserver"
+
+ node_modules/expo-font/build/server.js
+ | import "./ExpoFontLoader"
+
+ node_modules/expo-router/build/static/renderStaticContent.js
+ | import "expo-font/build/server"
+
+ node_modules/expo-router/node/render.js
+ | import "expo-router/build/static/renderStaticContent"
+
+ 
+ | import "expo-router/node/render.js"
+
+
+Call Stack
+  <unknown> (node_modules/expo-font/build/ExpoFontLoader.web.js:0)
+iOS node_modules/expo-router/entry.js ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 977ms node_modules/expo-router/entry.js (1550 modules)
