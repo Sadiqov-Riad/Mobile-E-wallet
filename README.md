@@ -1,6 +1,6 @@
 # 💳 Mobile E-Wallet Application
 
-Современное мобильное приложение для управления электронным кошельком, разработанное на **React Native** с использованием **TypeScript**. Проект представляет собой удобный финансовый инструмент с акцентом на чистый UI и плавное взаимодействие.
+A modern mobile electronic wallet application built with **React Native** and **TypeScript**. This project features a premium dark UI and focuses on delivering a seamless financial management experience for everyday users.
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![React Native](https://img.shields.io/badge/React_Native-v0.72+-61DAFB?logo=react&logoColor=black)
@@ -8,57 +8,57 @@
 
 ---
 
-## ✨ Основные возможности
+## ✨ Key Features
 
-* 📊 **Dashboard:** Наглядное отображение баланса и статистики расходов.
-* 💳 **Управление картами:** Визуальное отображение и переключение между банковскими картами.
-* 💸 **История транзакций:** Детализированный список операций с категориями и иконками.
-* 🌑 **Dark Mode:** Интерфейс выполнен в премиальном темном стиле.
-* ⚡ **UX/UI:** Быстрая навигация и отзывчивый интерфейс для ежедневного использования.
-
----
-
-## 🚀 Технологический стек
-
-* **Frontend:** [React Native](https://reactnative.dev/)
-* **Язык:** [TypeScript](https://www.typescriptlang.org/)
-* **Навигация:** [React Navigation](https://reactnavigation.org/) (Stack & Tabs)
-* **Иконки:** [Lucide React Native](https://lucide.dev/) / FontAwesome
-* **Стилизация:** StyleSheet / Styled-components
+* 📊 **Smart Dashboard:** Real-time balance tracking and expense statistics.
+* 💳 **Card Management:** Beautifully visualized digital cards with quick switching.
+* 💸 **Transaction History:** Detailed list of operations with category icons and status tracking.
+* 🌑 **Premium Dark UI:** Sleek, high-contrast interface designed for modern devices.
+* ⚡ **Fluid UX:** Smooth transitions and optimized list rendering for a native feel.
 
 ---
 
-## 🛠 Установка и запуск
+## 🚀 Tech Stack
 
-1.  **Клонируйте репозиторий:**
+* **Framework:** [React Native](https://reactnative.dev/)
+* **Language:** [TypeScript](https://www.typescriptlang.org/) (Strictly typed for reliability)
+* **Navigation:** [React Navigation](https://reactnavigation.org/) (Stack & Bottom Tabs)
+* **Icons:** [Lucide React Native](https://lucide.dev/) / FontAwesome
+* **Styling:** StyleSheet / Styled-components
+
+---
+
+## 🛠 Installation & Setup
+
+1.  **Clone the repository:**
     ```bash
     git clone [https://github.com/Sadiqov-Riad/Mobile-E-wallet.git](https://github.com/Sadiqov-Riad/Mobile-E-wallet.git)
     cd Mobile-E-wallet
     ```
 
-2.  **Установите зависимости:**
+2.  **Install dependencies:**
     ```bash
     npm install
     ```
 
-3.  **Запустите Metro Bundler:**
+3.  **Start Metro Bundler:**
     ```bash
     npx react-native start
     ```
 
-4.  **Запустите на устройстве/эмуляторе:**
+4.  **Run on Device/Emulator:**
     * **Android:** `npx react-native run-android`
     * **iOS:** `npx react-native run-ios`
 
 ---
 
-## 📂 Структура проекта
+## 📂 Project Structure
 
 ```text
 src/
- ├── components/    # Переиспользуемые UI элементы (кнопки, карточки)
- ├── screens/       # Экраны (Home, Transactions, Cards, Profile)
- ├── navigation/    # Конфигурация роутинга приложения
- ├── constants/     # Цветовые схемы, шрифты и стили
- ├── types/         # TypeScript интерфейсы и типы данных
- └── assets/        # Изображения, кастомные шрифты и иконки
+ ├── components/    # Reusable UI atoms (buttons, inputs, cards)
+ ├── screens/       # Main application screens (Home, Wallet, Profile)
+ ├── navigation/    # App routing and navigator configurations
+ ├── constants/     # Global theme colors, spacing, and styles
+ ├── types/         # TypeScript interfaces and type definitions
+ └── assets/        # Local images, custom fonts, and static icons
