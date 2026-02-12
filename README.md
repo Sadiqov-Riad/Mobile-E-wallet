@@ -1,50 +1,64 @@
-# Welcome to your Expo app 👋
+# 💳 Mobile E-Wallet Application
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Современное мобильное приложение для управления электронным кошельком, разработанное на **React Native** с использованием **TypeScript**. Проект представляет собой удобный финансовый инструмент с акцентом на чистый UI и плавное взаимодействие.
 
-## Get started
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![React Native](https://img.shields.io/badge/React_Native-v0.72+-61DAFB?logo=react&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-v5.0-3178C6?logo=typescript&logoColor=white)
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## ✨ Основные возможности
 
-2. Start the app
+* 📊 **Dashboard:** Наглядное отображение баланса и статистики расходов.
+* 💳 **Управление картами:** Визуальное отображение и переключение между банковскими картами.
+* 💸 **История транзакций:** Детализированный список операций с категориями и иконками.
+* 🌑 **Dark Mode:** Интерфейс выполнен в премиальном темном стиле.
+* ⚡ **UX/UI:** Быстрая навигация и отзывчивый интерфейс для ежедневного использования.
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 🚀 Технологический стек
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+* **Frontend:** [React Native](https://reactnative.dev/)
+* **Язык:** [TypeScript](https://www.typescriptlang.org/)
+* **Навигация:** [React Navigation](https://reactnavigation.org/) (Stack & Tabs)
+* **Иконки:** [Lucide React Native](https://lucide.dev/) / FontAwesome
+* **Стилизация:** StyleSheet / Styled-components
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## 🛠 Установка и запуск
 
-When you're ready, run:
+1.  **Клонируйте репозиторий:**
+    ```bash
+    git clone [https://github.com/Sadiqov-Riad/Mobile-E-wallet.git](https://github.com/Sadiqov-Riad/Mobile-E-wallet.git)
+    cd Mobile-E-wallet
+    ```
 
-```bash
-npm run reset-project
-```
+2.  **Установите зависимости:**
+    ```bash
+    npm install
+    ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+3.  **Запустите Metro Bundler:**
+    ```bash
+    npx react-native start
+    ```
 
-## Learn more
+4.  **Запустите на устройстве/эмуляторе:**
+    * **Android:** `npx react-native run-android`
+    * **iOS:** `npx react-native run-ios`
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## 📂 Структура проекта
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```text
+src/
+ ├── components/    # Переиспользуемые UI элементы (кнопки, карточки)
+ ├── screens/       # Экраны (Home, Transactions, Cards, Profile)
+ ├── navigation/    # Конфигурация роутинга приложения
+ ├── constants/     # Цветовые схемы, шрифты и стили
+ ├── types/         # TypeScript интерфейсы и типы данных
+ └── assets/        # Изображения, кастомные шрифты и иконки
