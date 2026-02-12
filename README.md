@@ -2,7 +2,7 @@
 
 A modern mobile electronic wallet application built with **React Native** and **TypeScript**. This project features a premium dark UI and focuses on delivering a seamless financial management experience for everyday users.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![License](https://img.shields.io/badge/license-Apache-orange.svg)
 ![React Native](https://img.shields.io/badge/React_Native-v0.72+-61DAFB?logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-v5.0-3178C6?logo=typescript&logoColor=white)
 
