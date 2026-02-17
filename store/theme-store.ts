@@ -27,8 +27,6 @@ export const useThemeStore = create<ThemeState>()(
   ),
 );
 
-/* ─── App color palettes ─── */
-
 const DarkColors = {
   // Primary colors
   primary: '#A855F7',

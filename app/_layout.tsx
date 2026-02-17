@@ -1,10 +1,12 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { onNotification, startNotificationHub, stopNotificationHub } from '@/services/notification-hub';
+import { useNotificationStore } from '@/store/notification-store';
 import { useThemeStore } from '@/store/theme-store';
 import { useUserStore } from '@/store/user-store';
 import { useWalletStore } from '@/store/wallet-store';
@@ -25,6 +27,8 @@ export default function RootLayout() {
   const isDark = mode === 'dark';
   const { isAuthenticated, hasSeenOnboarding, completeOnboarding, profile } = useUserStore();
   const setWalletCurrency = useWalletStore((s) => s.setCurrency);
+  const { loadNotifications, addNotification } = useNotificationStore();
+  const hubStartedRef = useRef(false);
   const [appState, setAppState] = useState<AppState>('loading');
 
   useEffect(() => {
@@ -54,6 +58,30 @@ export default function RootLayout() {
       setWalletCurrency(profile.currency);
     }
   }, [profile?.currency, setWalletCurrency]);
+
+  useEffect(() => {
+    if (appState !== 'main' || !isAuthenticated) return;
+    let cancelled = false;
+
+    (async () => {
+      if (hubStartedRef.current) return;
+      hubStartedRef.current = true;
+      await startNotificationHub();
+      if (cancelled) return;
+      await loadNotifications();
+    })();
+
+    const unsub = onNotification((n) => {
+      if (!cancelled) addNotification(n);
+    });
+
+    return () => {
+      cancelled = true;
+      unsub();
+      stopNotificationHub();
+      hubStartedRef.current = false;
+    };
+  }, [appState, isAuthenticated]);
 
   const handleOnboardingComplete = () => {
     completeOnboarding();
@@ -111,6 +139,7 @@ export default function RootLayout() {
             <Stack.Screen name="statements" options={{ presentation: 'card' }} />
             <Stack.Screen name="settings" options={{ presentation: 'card' }} />
             <Stack.Screen name="support" options={{ presentation: 'card' }} />
+            <Stack.Screen name="notifications" options={{ presentation: 'card' }} />
             <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
           </Stack>
           <StatusBar style={isDark ? 'light' : 'dark'} />

@@ -1,9 +1,13 @@
+import { useResultOverlay } from '@/components/result-overlay';
+import { createTopUpIntent, pollTopUpStatus } from '@/services/payments-api';
+import { getBalance } from '@/services/profile-api';
 import { useAppColors } from '@/store/theme-store';
 import { useWalletStore } from '@/store/wallet-store';
+import { usePaymentSheet } from '@stripe/stripe-react-native';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
-  Alert,
+  ActivityIndicator,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,9 +15,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Svg, { Circle, Path, Rect } from 'react-native-svg';
-
-//Icons
+import Svg, { Path, Rect } from 'react-native-svg';
 
 const BackIcon = ({ color = '#FFFFFF' }: { color?: string }) => (
   <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -21,66 +23,71 @@ const BackIcon = ({ color = '#FFFFFF' }: { color?: string }) => (
   </Svg>
 );
 
-const CardMethodIcon = ({ color = '#A855F7' }) => (
+const CardIcon = ({ color = '#A855F7' }) => (
   <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
     <Rect x="2" y="5" width="20" height="14" rx="2" stroke={color} strokeWidth="2" />
     <Path d="M2 10H22" stroke={color} strokeWidth="2" />
   </Svg>
 );
 
-const BankMethodIcon = ({ color = '#3B82F6' }) => (
-  <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
-    <Path d="M3 21H21M4 18H20M5 14H19M12 3L2 9H22L12 3Z" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </Svg>
-);
-
-const CashMethodIcon = ({ color = '#10B981' }) => (
-  <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
-    <Rect x="2" y="4" width="20" height="16" rx="2" stroke={color} strokeWidth="2" />
-    <Circle cx="12" cy="12" r="4" stroke={color} strokeWidth="2" />
-    <Circle cx="5" cy="8" r="1" fill={color} />
-    <Circle cx="19" cy="16" r="1" fill={color} />
-  </Svg>
-);
-
-const CheckIcon = ({ color = '#6C5CE7' }: { color?: string }) => (
-  <Svg width={20} height={20} viewBox="0 0 20 20" fill="none">
-    <Path d="M4 10L8 14L16 6" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-  </Svg>
-);
-
-/* ───────── Component ───────── */
-
 const QUICK_AMOUNTS = [10, 25, 50, 100, 250, 500];
-const METHODS = [
-  { id: 'card', label: 'Debit / Credit Card', Icon: CardMethodIcon, color: '#A855F7' },
-  { id: 'bank', label: 'Bank Transfer', Icon: BankMethodIcon, color: '#3B82F6' },
-  { id: 'cash', label: 'Cash Deposit', Icon: CashMethodIcon, color: '#10B981' },
-];
 
 export default function AddFundsScreen() {
   const router = useRouter();
   const colors = useAppColors();
-  const { addFunds, currency } = useWalletStore();
+  const { currency } = useWalletStore();
+  const setBalance = useWalletStore((s) => s.setBalance);
   const [amount, setAmount] = useState('');
-  const [method, setMethod] = useState('card');
+  const [busy, setBusy] = useState(false);
+  const { show, overlay } = useResultOverlay();
+  const { initPaymentSheet, presentPaymentSheet } = usePaymentSheet();
 
-  const handleAdd = () => {
+  const handleStripePayment = async () => {
     const value = parseFloat(amount);
     if (isNaN(value) || value <= 0) {
-      Alert.alert('Invalid Amount', 'Please enter a valid amount.');
+      show('error', 'Invalid Amount', 'Please enter a valid amount.');
       return;
     }
-    const selectedMethod = METHODS.find((m) => m.id === method);
-    addFunds(value, selectedMethod?.label ?? 'Card');
-    Alert.alert('Success', `${value.toFixed(2)} ${currency} has been added to your balance.`, [
-      { text: 'OK', onPress: () => router.back() },
-    ]);
+
+    setBusy(true);
+    try {
+      const intent = await createTopUpIntent(value, currency.toLowerCase());
+
+      const { error: initError } = await initPaymentSheet({
+        paymentIntentClientSecret: intent.clientSecret,
+        merchantDisplayName: 'E-Wallet',
+      });
+      if (initError) {
+        show('error', 'Payment Error', initError.message);
+        return;
+      }
+
+      const { error: presentError } = await presentPaymentSheet();
+      if (presentError) {
+        if (presentError.code !== 'Canceled') {
+          show('error', 'Payment Failed', presentError.message);
+        }
+        return;
+      }
+
+      const status = await pollTopUpStatus(intent.topUpId);
+      if (status.status === 'completed') {
+        const bal = await getBalance();
+        setBalance(bal.balance);
+        show('success', 'Funds Added!', `${value.toFixed(2)} ${currency} has been added.`);
+        setTimeout(() => router.back(), 2000);
+      } else {
+        show('error', 'Payment Failed', 'The payment could not be completed.');
+      }
+    } catch (err: any) {
+      show('error', 'Error', err?.message ?? 'Something went wrong.');
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <BackIcon color={colors.textPrimary} />
@@ -90,7 +97,6 @@ export default function AddFundsScreen() {
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        {/* Amount Input */}
         <View style={styles.amountSection}>
           <Text style={[styles.amountLabel, { color: colors.textMuted }]}>Amount</Text>
           <View style={[styles.amountInputRow, { backgroundColor: colors.backgroundCard }]}>
@@ -102,15 +108,16 @@ export default function AddFundsScreen() {
               placeholder="0.00"
               placeholderTextColor={colors.textMuted}
               keyboardType="decimal-pad"
+              editable={!busy}
             />
           </View>
         </View>
 
-        {/* Quick Amounts */}
         <View style={styles.quickAmounts}>
           {QUICK_AMOUNTS.map((qa) => (
             <TouchableOpacity
               key={qa}
+              disabled={busy}
               style={[
                 styles.quickBtn,
                 { backgroundColor: colors.backgroundCard },
@@ -129,36 +136,32 @@ export default function AddFundsScreen() {
           ))}
         </View>
 
-        {/* Payment Method */}
-        <Text style={[styles.sectionLabel, { color: colors.textMuted }]}>PAYMENT METHOD</Text>
-        {METHODS.map((m) => (
-          <TouchableOpacity
-            key={m.id}
-            style={[
-              styles.methodCard,
-              { backgroundColor: colors.backgroundCard, borderColor: 'transparent' },
-              method === m.id && { borderColor: colors.primary },
-            ]}
-            onPress={() => setMethod(m.id)}
-            activeOpacity={0.7}
-          >
-            <View style={styles.methodLeft}>
-              <View style={[styles.methodIconBox, { backgroundColor: m.color + '18' }]}>
-                <m.Icon color={m.color} />
-              </View>
-              <Text style={[styles.methodLabel, { color: colors.textPrimary }]}>{m.label}</Text>
+        <View style={[styles.methodCard, { backgroundColor: colors.backgroundCard }]}>
+          <View style={styles.methodLeft}>
+            <View style={[styles.methodIconBox, { backgroundColor: '#A855F718' }]}>
+              <CardIcon />
             </View>
-            {method === m.id && <CheckIcon color={colors.primary} />}
-          </TouchableOpacity>
-        ))}
+            <Text style={[styles.methodLabel, { color: colors.textPrimary }]}>Pay with Card</Text>
+          </View>
+        </View>
       </ScrollView>
 
-      {/* Add Button */}
       <View style={styles.footer}>
-        <TouchableOpacity style={[styles.addButton, { backgroundColor: colors.primary }]} onPress={handleAdd} activeOpacity={0.8}>
-          <Text style={styles.addButtonText}>Add Funds</Text>
+        <TouchableOpacity
+          style={[styles.addButton, { backgroundColor: colors.primary }, busy && { opacity: 0.6 }]}
+          onPress={handleStripePayment}
+          activeOpacity={0.8}
+          disabled={busy}
+        >
+          {busy ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.addButtonText}>Add Funds</Text>
+          )}
         </TouchableOpacity>
       </View>
+
+      {overlay}
     </View>
   );
 }

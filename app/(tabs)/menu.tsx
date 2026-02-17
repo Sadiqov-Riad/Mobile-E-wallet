@@ -156,8 +156,6 @@ const MENU_SECTIONS: { title: string; items: MenuItem[] }[] = [
   },
 ];
 
-/* ───────── Component ───────── */
-
 export default function MenuScreen() {
   const router = useRouter();
   const { profile, logout } = useUserStore();

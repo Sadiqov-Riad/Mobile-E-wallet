@@ -1,3 +1,6 @@
+import { useNotificationStore } from '@/store/notification-store';
+import { useAppColors } from '@/store/theme-store';
+import { useWalletStore } from '@/store/wallet-store';
 import { useRouter } from 'expo-router';
 import React from 'react';
 import {
@@ -8,14 +11,20 @@ import {
   View,
 } from 'react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
-import { useAppColors } from '@/store/theme-store';
-import { useWalletStore } from '@/store/wallet-store';
 
 export default function HomeScreen() {
   const router = useRouter();
   const { balance, currency, transactions, toDisplayAmount } = useWalletStore();
   const colors = useAppColors();
   const displayBalance = toDisplayAmount(balance);
+  const unreadCount = useNotificationStore((s) => s.unreadCount);
+
+  const BellIcon = () => (
+    <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
+      <Path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke={colors.textPrimary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <Path d="M13.73 21a2 2 0 01-3.46 0" stroke={colors.textPrimary} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </Svg>
+  );
 
   const PlusIcon = () => (
     <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -52,6 +61,20 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
+        {/* Header with Bell */}
+        <View style={styles.headerRow}>
+          <View style={{ width: 40 }} />
+          <View style={{ flex: 1 }} />
+          <TouchableOpacity onPress={() => router.push('/notifications')} style={styles.bellBtn}>
+            <BellIcon />
+            {unreadCount > 0 && (
+              <View style={styles.badge}>
+                <Text style={styles.badgeText}>{unreadCount > 9 ? '9+' : unreadCount}</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
+
         {/* Balance */}
         <View style={styles.balanceSection}>
           <View style={styles.balanceContainer}>
@@ -123,7 +146,19 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   scrollView: { flex: 1 },
   scrollContent: { paddingBottom: 100 },
-  balanceSection: { paddingHorizontal: 24, paddingTop: 70, paddingBottom: 20 },
+  headerRow: {
+    flexDirection: 'row', alignItems: 'center',
+    paddingHorizontal: 24, paddingTop: 60,
+  },
+  bellBtn: { position: 'relative', padding: 4 },
+  badge: {
+    position: 'absolute', top: -2, right: -4,
+    backgroundColor: '#EF4444', borderRadius: 10,
+    minWidth: 18, height: 18, justifyContent: 'center', alignItems: 'center',
+    paddingHorizontal: 4,
+  },
+  badgeText: { color: '#fff', fontSize: 10, fontWeight: '700' },
+  balanceSection: { paddingHorizontal: 24, paddingTop: 10, paddingBottom: 20 },
   balanceContainer: { alignItems: 'center', marginBottom: 36, marginTop: 60},
   balanceAmount: { flexDirection: 'row', alignItems: 'baseline' },
   balanceWhole: { fontSize: 64, fontWeight: '300' },
